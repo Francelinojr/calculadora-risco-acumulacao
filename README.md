@@ -1,48 +1,42 @@
-📋 Calculadora Multidimensional de Risco de Acumulação
-Este projeto é uma ferramenta de apoio à decisão para avaliação de casos de acumulação severa (objetos e animais). Ele permite que técnicos e pesquisadores realizem uma avaliação estruturada em cinco dimensões, gerando automaticamente uma classificação de risco e recomendações de intervenção.
+# 📋 Calculadora Multidimensional de Risco de Acumulação
 
-O projeto foi desenvolvido como parte dos meus estudos em Ciência de Dados e Inteligência Artificial na UFPB.
+Este projeto é uma ferramenta de apoio à decisão para avaliação de casos de acumulação (objetos e animais), desenvolvida para auxiliar equipes técnicas na classificação de riscos e definição de intervenções.
 
-🚀 Demonstração
-O sistema está publicado e pode ser acessado pelo link:
-calculadora-risco-acumulacao.streamlit.app
+O sistema permite a coleta estruturada de dados em campo e automatiza a análise com base em critérios multidimensionais, salvando os resultados em tempo real em uma base de dados na nuvem.
 
-🛠️ Tecnologias Utilizadas
-Python: Linguagem principal para lógica de dados.
+## 🚀 Demonstração
+O aplicativo está publicado e pode ser acessado em:
+👉 **[calculadora-risco-acumulacao.streamlit.app](https://calculadora-risco-acumulacao.streamlit.app/)**
 
-Streamlit: Framework para a interface web interativa.
+## 🛠️ Tecnologias Utilizadas
+* **Python**: Linguagem base para o desenvolvimento da lógica.
+* **Streamlit**: Framework utilizado para a criação da interface web interativa.
+* **Pandas**: Biblioteca para estruturação e manipulação dos dados das avaliações.
+* **Google Sheets API**: Integração para persistência de dados via Service Account.
+* **GitHub**: Controle de versão e hospedagem do código-fonte.
 
-Pandas: Manipulação e estruturação dos dados coletados.
+## 📊 Metodologia de Avaliação
+A calculadora avalia cinco categorias críticas, com pontuações de 0 a 4 para cada uma:
 
-Google Sheets API: Persistência de dados em nuvem via conta de serviço.
+1. **Risco Estrutural**: Avaliação da integridade física do imóvel.
+2. **Risco Sanitário**: Verificação de higiene e presença de vetores como ratos e baratas.
+3. **Acúmulo de Animais**: Diagnóstico da quantidade e bem-estar dos animais presentes.
+4. **Uso do Espaço**: Medição do nível de obstrução de cômodos e saídas.
+5. **Vulnerabilidade Psicossocial**: Análise da autonomia e rede de apoio do morador.
 
-GitHub Actions/Streamlit Cloud: Deploy e integração contínua.
 
-📊 Metodologia de Avaliação
-O sistema pontua cinco categorias críticas (0 a 4 pontos cada):
 
-Risco Estrutural: Condições físicas do imóvel.
+### Classificação Final
+O sistema calcula a soma total e gera automaticamente a classificação:
+* 🟢 **0–7 pontos**: Risco Baixo.
+* 🟡 **8–12 pontos**: Risco Moderado.
+* 🟠 **13–20 pontos**: Risco Alto.
+* 🔴 **≥21 pontos (ou qualquer item nível 4)**: Risco Grave.
 
-Risco Sanitário: Presença de vetores (ratos, baratas) e higiene.
+## 📂 Estrutura de Arquivos
+* `site.py`: Script principal com a interface e lógica de cálculo.
+* `requirements.txt`: Lista de bibliotecas necessárias para rodar o projeto.
+* `.streamlit/secrets.toml`: Arquivo de configuração de chaves de API (não incluído no repositório por segurança).
 
-Acúmulo de Animais: Quantidade, bem-estar e zoonoses.
-
-Uso do Espaço: Nível de obstrução e acessibilidade.
-
-Vulnerabilidade Psicossocial: Capacidade de autocuidado e rede de apoio.
-
-Classificação de Risco
-🟢 0–7 Pontos: Risco Baixo.
-
-🟡 8–12 Pontos: Risco Moderado.
-
-🟠 13–20 Pontos: Risco Alto.
-
-🔴 ≥21 Pontos ou Item Nível 4: Risco Grave (Prioridade Assistencial).
-
-📂 Estrutura do Projeto
-site.py: Código-fonte da aplicação Streamlit.
-
-requirements.txt: Dependências do ambiente.
-
-.streamlit/secrets.toml: (Protegido) Configurações de autenticação segura para conexão com a API do Google.
+## 👤 Autor
+Desenvolvido por um estudante de **Ciência de Dados e Inteligência Artificial** da **UFPB** (Universidade Federal da Paraíba).
