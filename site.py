@@ -76,7 +76,7 @@ endereco = st.text_input("Endereço:")
 # ------------------ CONFIGURAÇÃO DAS CATEGORIAS ------------------
 CATEGORIAS = {
     "cat1_estrutural": {
-        "titulo": "🔹 Categoria 1 – CONDIÇÃO ESTRUTURAL",
+        "titulo": "🔹CONDIÇÃO ESTRUTURAL",
         "descricao": [
             "0 – Estrutura íntegra",
             "1 – Trincas leves",
@@ -86,7 +86,7 @@ CATEGORIAS = {
         ]
     },
     "cat2_sanitario": {
-        "titulo": "🔹 Categoria 2 – RISCO SANITÁRIO / HIGIÊNICO",
+        "titulo": "🔹RISCO SANITÁRIO / HIGIÊNICO",
         "descricao": [
             "0 – Ambiente limpo / desorganizado",
             "1 – Lixo leve",
@@ -96,7 +96,7 @@ CATEGORIAS = {
         ]
     },
     "cat3_animais": {
-        "titulo": "🔹 Categoria 3 – ACÚMULO DE ANIMAIS",
+        "titulo": "🔹ACÚMULO DE ANIMAIS",
         "descricao": [
             "0 – Quantidade adequada",
             "1 – Leve desorganização",
@@ -106,7 +106,7 @@ CATEGORIAS = {
         ]
     },
     "cat4_obstrucao": {
-        "titulo": "🔹 Categoria 4 – USO DO ESPAÇO / OBSTRUÇÃO",
+        "titulo": "🔹USO DO ESPAÇO / OBSTRUÇÃO",
         "descricao": [
             "0 – Todos os cômodos funcionais",
             "1 – Bagunça leve",
@@ -116,7 +116,7 @@ CATEGORIAS = {
         ]
     },
     "cat5_psicossocial": {
-        "titulo": "🔹 Categoria 5 – Vulnerabilidade Psicossocial",
+        "titulo": "🔹Vulnerabilidade Psicossocial",
         "descricao": [
             "0 – Autonomia preservada",
             "1 – Isolamento leve",
