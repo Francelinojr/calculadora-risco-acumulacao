@@ -8,11 +8,17 @@ st.set_page_config(page_title="Calculadora de Risco de Acumulação", page_icon=
 st.title("📋 Avaliação Multidimensional de Acumulação")
 st.markdown("---")
 
+# --- CONEXÃO COM GOOGLE SHEETS ---
 gs_conn = st.connection("gsheets", type=GSheetsConnection)
 WORKSHEET_NAME = "Avaliacoes_Acumulacao1"
 
-# --- CATEGORIA 1: RISCO ESTRUTURAL ---
-st.header("🔹 Categoria 1 – Risco Estrutural")
+# --- CATEGORIA: IDENTIFICAÇÃO ---
+st.subheader("Identificação do Morador")
+nome_morador = st.text_input("Nome do(a) morador(a):")
+endereco = st.text_input("Endereço:")
+
+# --- CATEGORIA 1: ESTRUTURAL ---
+st.header("🔹 Categoria 1 – CONDIÇÃO ESTRUTURAL")
 cat1 = st.radio("Selecione a condição estrutural:", 
                 options=[0, 1, 2, 3, 4],
                 format_func=lambda x: [
@@ -24,52 +30,31 @@ cat1 = st.radio("Selecione a condição estrutural:",
                 ][x])
 
 # --- CATEGORIA 2: RISCO SANITÁRIO ---
-st.header("🔹 Categoria 2 – Risco Sanitário / Higiênico")
+st.header("🔹 Categoria 2 – RISCO SANITÁRIO / HIGIÊNICO")
 cat2 = st.radio("Selecione a condição sanitária:",
                 options=[0, 1, 2, 3, 4],
                 format_func=lambda x: [
-                    "0 – Ambiente limpo",
+                    "0 – Ambiente limpo / desorganizado.",
                     "1 – Lixo leve",
-                    "2 – Lixo moderado / insetos ocasionais",
-                    "3 – Lixo putrefato / fezes / odor forte",
-                    "4 – Infestação grave (ratos/baratas/escorpiões)"
+                    "2 – Lixo moderado / ratos, baratas e etc., ocasionais",
+                    "3 – Lixo putrefato / fezes / odor forte. Vetores frequentes.",
+                    "4 – Infestação grave (ratos/baratas/escorpiões). Risco para vizinhos."
                 ][x])
-st.subheader("Vetores identificados")
-col_v1, col_v2, col_v3, col_v4 = st.columns(4)
-with col_v1:
-    v_baratas = st.checkbox("Baratas")
-with col_v2:
-    v_ratos = st.checkbox("Ratos")
-with col_v3:
-    v_escorpioes = st.checkbox("Escorpiões")
-with col_v4:
-    v_moscas = st.checkbox("Moscas")
-v_outros = st.text_input("Outros (descrição)")
 
 # --- CATEGORIA 3: ACÚMULO DE ANIMAIS ---
-st.header("🔹 Categoria 3 – Acúmulo de Animais")
-
-qtd_animais = st.number_input("Quantidade de animais", min_value=0, step=1, value=0)
-especies = st.text_input("Espécies")
-
+st.header("🔹 Categoria 3 – ACÚMULO DE ANIMAIS")
 cat3 = st.radio("Selecione a condição dos animais:",
                 options=[0, 1, 2, 3, 4],
                 format_func=lambda x: [
-                    "0 – Quantidade adequada e cuidados presentes",
-                    "1 – Leve desorganização",
-                    "2 – Número acima do suportado",
-                    "3 – Maus-tratos evidentes",
+                    "0 – Nenhum animal / quantidade adequada e cuidados presentes.",
+                    "1 – Leve desorganização e cuidados presentes.",
+                    "2 – Número acima do suportado higiene ruim e ausência de cuidados veterinários.",
+                    "3 – Maus-tratos evidentes, animais magros/doentes.",
                     "4 – Acumulação severa (>15–20 animais / cadáveres / zoonoses)"
                 ][x])
 
-cond_animais = st.radio("Condição corporal dos animais:", 
-                        options=["Adequada", "Magros", "Doentes", "Feridos"])
-
-obs_vet = st.text_area("Digite as observações veterinárias/sanitárias aqui...")
-
-
 # --- CATEGORIA 4: USO DO ESPAÇO ---
-st.header("🔹 Categoria 4 – Uso do Espaço / Obstrução")
+st.header("🔹 Categoria 4 – USO DO ESPAÇO / OBSTRUÇÃO")
 cat4 = st.radio("Selecione o nível de obstrução:",
                 options=[0, 1, 2, 3, 4],
                 format_func=lambda x: [
@@ -80,8 +65,6 @@ cat4 = st.radio("Selecione o nível de obstrução:",
                     "4 – Saídas bloqueadas"
                 ][x])
 
-comodos_inutilizados = st.text_input("Cômodos inutilizados")
-
 # --- CATEGORIA 5: VULNERABILIDADE PSICOSSOCIAL ---
 st.header("🔹 Categoria 5 – Vulnerabilidade Psicossocial")
 cat5 = st.radio("Selecione a vulnerabilidade:",
@@ -91,23 +74,13 @@ cat5 = st.radio("Selecione a vulnerabilidade:",
                     "1 – Isolamento leve",
                     "2 – Sem rede de apoio",
                     "3 – Autoabandono",
-                    "4 – Incapacidade grave de autocuidado"
+                    "4 – Incapacidade grave de autocuidado, agressividade, surto e etc."
                 ][x])
-
-mora_sozinho = st.radio("Morador mora sozinho?", options=["Sim", "Não"], index=1)
-acomp_saude = st.radio("Recebe acompanhamento de saúde?", options=["Sim", "Não"], index=1)
-
-aps = st.text_area("Digite as observações sociais/APS aqui...")
-
 
 # --- CÁLCULO FINAL ---
 total_pontos = cat1 + cat2 + cat3 + cat4 + cat5
 tem_item_4 = any([cat1==4, cat2==4, cat3==4, cat4==4, cat5==4])
 
-st.markdown("---")
-st.subheader(f"Pontuação Total: {total_pontos}")
-
-# Lógica de Classificação conforme sua imagem
 if total_pontos >= 21 or tem_item_4:
     status = "🔴 RISCO GRAVE (NÍVEL 4)"
     cor = "red"
@@ -125,115 +98,67 @@ else:
     cor = "green"
     intervencao = "Monitoramento periódico. Visitas domiciliares trimestrais. Apoio matricial."
 
+st.markdown("---")
+st.subheader(f"Pontuação Total: {total_pontos}")
 st.markdown(f"### Classificação Final: :{cor}[{status}]")
 st.info(f"**Intervenção Recomendada:** {intervencao}")
 
-st.subheader("Cálculo do Risco Global")
-col1, col2, col3, col4, col5, col6 = st.columns(6)
-with col1:
-    st.metric("Estrutural", cat1)
-with col2:
-    st.metric("Sanitário", cat2)
-with col3:
-    st.metric("Animais", cat3)
-with col4:
-    st.metric("Uso do espaço", cat4)
-with col5:
-    st.metric("Psicossocial", cat5)
-with col6:
-    st.metric("Total geral", total_pontos)
-
-st.markdown("#### Critérios de Classificação")
-st.markdown("- 0–7 → 🟢 RISCO BAIXO")
-st.markdown("- 8–12 → 🟡 RISCO MODERADO")
-st.markdown("- 13–20 → 🟠 RISCO ALTO")
-st.markdown("- ≥21 ou qualquer item 4 → 🔴 RISCO GRAVE")
+# --- FUNÇÕES DE PERSISTÊNCIA ---
 
 def salvar_avaliacao():
+    # Dicionário atualizado apenas com os dados presentes no formulário
     row = {
         "timestamp": [datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
-        "qtd_animais": [int(qtd_animais)],
-        "especies": [especies],
-        "v_baratas": [int(v_baratas)],
-        "v_ratos": [int(v_ratos)],
-        "v_escorpioes": [int(v_escorpioes)],
-        "v_moscas": [int(v_moscas)],
-        "v_outros": [v_outros],
-        "cat1": [int(cat1)],
-        "cat2": [int(cat2)],
-        "cat3": [int(cat3)],
-        "cat4": [int(cat4)],
-        "cat5": [int(cat5)],
-        "cond_animais": [cond_animais],
-        "comodos_inutilizados": [comodos_inutilizados],
-        "mora_sozinho": [mora_sozinho],
-        "acomp_saude": [acomp_saude],
-        "obs_vet": [obs_vet],
-        "aps": [aps],
+        "nome_morador": [nome_morador],
+        "endereco": [endereco],
+        "cat1_estrutural": [int(cat1)],
+        "cat2_sanitario": [int(cat2)],
+        "cat3_animais": [int(cat3)],
+        "cat4_obstrucao": [int(cat4)],
+        "cat5_psicossocial": [int(cat5)],
         "total_pontos": [int(total_pontos)],
-        "tem_item_4": [int(tem_item_4)],
-        "status": [status],
-        "intervencao": [intervencao],
+        "status_risco": [status],
+        "intervencao": [intervencao]
     }
     try:
+        # Lê os dados existentes para concatenar
         df_existing = gs_conn.read(worksheet=WORKSHEET_NAME, ttl=0)
-        df_final = pd.concat([df_existing, pd.DataFrame(row)], ignore_index=True)
+        df_new = pd.DataFrame(row)
+        df_final = pd.concat([df_existing, df_new], ignore_index=True)
+        
+        # Faz o update na planilha
         gs_conn.update(worksheet=WORKSHEET_NAME, data=df_final)
         return True
     except Exception as e:
-        st.error(f"Falha ao salvar na planilha: {e}")
-        return False
-
-def conn_gsheets_read():
-    try:
-        return gs_conn.read(worksheet=WORKSHEET_NAME, ttl=0)
-    except Exception:
-        return None
-
-def has_service_account():
-    try:
-        t = st.secrets.get("connections", {}).get("gsheets", {}).get("type", "")
-        return str(t).lower() == "service_account"
-    except Exception:
+        st.error(f"Erro ao salvar: {e}")
         return False
 
 def verificar_cabecalhos():
+    # Lista de colunas esperadas na planilha Google Sheets
     esperado = [
-        "timestamp","qtd_animais","especies","v_baratas","v_ratos","v_escorpioes","v_moscas","v_outros",
-        "cat1","cat2","cat3","cat4","cat5","cond_animais","comodos_inutilizados","mora_sozinho","acomp_saude",
-        "obs_vet","aps","total_pontos","tem_item_4","status","intervencao"
+        "timestamp", "nome_morador", "endereco", "cat1_estrutural", 
+        "cat2_sanitario", "cat3_animais", "cat4_obstrucao", 
+        "cat5_psicossocial", "total_pontos", "status_risco", "intervencao"
     ]
-    df = conn_gsheets_read()
-    if df is None:
-        st.error(f"Não foi possível ler a aba '{WORKSHEET_NAME}'. Verifique secrets e permissões.")
-        return
-    cols = list(df.columns)
-    faltando = [c for c in esperado if c not in cols]
-    extras = [c for c in cols if c not in esperado]
-    if not faltando and not extras:
-        st.success("Cabeçalhos conferem com o esperado.")
-    else:
-        if faltando:
-            st.error(f"Faltando na planilha: {', '.join(faltando)}")
-        if extras:
-            st.warning(f"Colunas extras na planilha: {', '.join(extras)}")
-
-if st.button("Salvar avaliação"):
-    ok_sheet = salvar_avaliacao()
-    if ok_sheet:
-        st.success(f"Avaliação salva na planilha Google ({WORKSHEET_NAME}).")
-        
-col_t1, col_t2 = st.columns(2)
-with col_t1:
-    if st.button("Testar conexão"):
-        if has_service_account():
-            df = conn_gsheets_read()
-            if df is None:
-                st.error(f"Falha ao ler '{WORKSHEET_NAME}'. Cheque compartilhamento com a service account.")
-            else:
-                st.success(f"Conexão OK. Linhas atuais: {len(df)}")
+    try:
+        df = gs_conn.read(worksheet=WORKSHEET_NAME, ttl=0)
+        cols = list(df.columns)
+        faltando = [c for c in esperado if c not in cols]
+        if not faltando:
+            st.success("Cabeçalhos sincronizados com sucesso!")
         else:
-            st.error("Secrets ausentes ou sem 'type = service_account'. Configure para habilitar escrita.")
-with col_t2:
-    if st.button("Verificar cabeçalhos"):
-        verificar_cabecalhos()
+            st.error(f"Faltam as colunas: {', '.join(faltando)}")
+    except:
+        st.error("Erro ao conectar com a planilha.")
+
+# --- BOTÕES DE AÇÃO ---
+if st.button("Salvar avaliação"):
+    if nome_morador:
+        if salvar_avaliacao():
+            st.success("Dados salvos com sucesso!")
+    else:
+        st.warning("Por favor, preencha o nome do morador antes de salvar.")
+
+st.sidebar.header("Painel Administrativo")
+if st.sidebar.button("Validar Colunas"):
+    verificar_cabecalhos()
