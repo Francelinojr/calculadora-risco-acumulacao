@@ -6,47 +6,48 @@ from streamlit_gsheets import GSheetsConnection
 # 1. Configuração da Página
 st.set_page_config(page_title="Calculadora de Risco de Acumulação", page_icon="📋", layout="centered")
 
-# 2. Estilização para Acessibilidade (Público Idoso/Visão Reduzida)
+# 2. Estilização para Acessibilidade (Fontes Maiores)
 st.markdown(
     """
     <style>
-    /* Aumenta o tamanho dos títulos das categorias */
+    /* Títulos das categorias */
     h2 {
         font-size: 28px !important;
         color: #1E3A8A !important;
     }
     
-    /* Aumenta o texto das perguntas (labels) */
+    /* Nome das perguntas */
     div[data-testid="stWidgetLabel"] p {
         font-size: 22px !important;
         font-weight: bold !important;
     }
     
-    /* Aumenta as opções do Radio Button */
+    /* Texto das opções (Radio) */
     div[data-testid="stMarkdownContainer"] p {
         font-size: 20px !important;
-        line-height: 1.5 !important;
+        line-height: 1.6 !important;
     }
 
-    /* Aumenta o tamanho da bolinha do Radio (clique mais fácil) */
+    /* Aumenta a bolinha de seleção */
     [data-testid="stSelectionControlValue"] {
         transform: scale(1.5);
         margin-right: 10px;
     }
 
-    /* Estilização do Botão Salvar (Grande e chamativo) */
+    /* Botão Salvar - Grande e Azul */
     div.stButton > button:first-child {
         width: 100%;
-        height: 3em;
+        height: 3.5em;
         font-size: 24px !important;
         font-weight: bold !important;
         background-color: #007bff !important;
         color: white !important;
-        border-radius: 10px;
-        margin-top: 20px;
+        border-radius: 12px;
+        border: none;
+        margin-top: 30px;
     }
 
-    /* Aumenta campos de texto */
+    /* Campos de entrada de texto */
     input {
         font-size: 20px !important;
     }
@@ -62,7 +63,7 @@ st.markdown("---")
 gs_conn = st.connection("gsheets", type=GSheetsConnection)
 WORKSHEET_NAME = "Avaliacoes_Acumulacao1"
 
-# ------------------ CACHE PARA REDUZIR CHAMADAS ------------------
+# ------------------ CACHE ------------------
 @st.cache_data(ttl=120)
 def carregar_dados():
     return gs_conn.read(worksheet=WORKSHEET_NAME)
@@ -129,13 +130,13 @@ CATEGORIAS = {
 def render_categoria(key, config):
     st.header(config["titulo"])
     return st.radio(
-        "Selecione uma opção abaixo:",
+        "Selecione uma opção:",
         options=list(range(5)),
         format_func=lambda x: config["descricao"][x],
         key=key
     )
 
-# ------------------ RENDERIZAÇÃO DINÂMICA ------------------
+# ------------------ RENDERIZAÇÃO ------------------
 respostas = {}
 for key, config in CATEGORIAS.items():
     respostas[key] = render_categoria(key, config)
@@ -146,29 +147,13 @@ tem_item_4 = any(valor == 4 for valor in respostas.values())
 
 def classificar_risco(total, tem_critico):
     if total >= 21 or tem_critico:
-        return (
-            "🔴 RISCO GRAVE (NÍVEL 4)",
-            "red",
-            "Acompanhamento multiprofissional intensivo e contínuo."
-        )
+        return ("🔴 RISCO GRAVE (NÍVEL 4)", "red", "Acompanhamento multiprofissional intensivo e contínuo.")
     elif 13 <= total <= 20:
-        return (
-            "🟠 RISCO ALTO (NÍVEL 3)",
-            "orange",
-            "Acompanhamento intensivo e visitas mensais."
-        )
+        return ("🟠 RISCO ALTO (NÍVEL 3)", "orange", "Acompanhamento intensivo e visitas mensais.")
     elif 8 <= total <= 12:
-        return (
-            "🟡 RISCO MODERADO (NÍVEL 2)",
-            "yellow",
-            "Elaboração de PTS e visitas bimestrais."
-        )
+        return ("🟡 RISCO MODERADO (NÍVEL 2)", "yellow", "Elaboração de PTS e visitas bimestrais.")
     else:
-        return (
-            "🟢 RISCO BAIXO (NÍVEL 1)",
-            "green",
-            "Monitoramento periódico e visitas trimestrais."
-        )
+        return ("🟢 RISCO BAIXO (NÍVEL 1)", "green", "Monitoramento periódico e visitas trimestrais.")
 
 status, cor, intervencao = classificar_risco(total_pontos, tem_item_4)
 
@@ -193,10 +178,7 @@ def salvar_dados():
         df_existing = carregar_dados()
         df_final = pd.concat([df_existing, pd.DataFrame([row])], ignore_index=True)
         gs_conn.update(worksheet=WORKSHEET_NAME, data=df_final)
-
-        # limpa o cache após salvar
         carregar_dados.clear()
-
         st.success("✅ Dados salvos com sucesso!")
     except Exception as e:
         st.error(f"❌ Erro ao salvar: {e}")
@@ -205,4 +187,4 @@ if st.button("SALVAR AVALIAÇÃO"):
     if nome_morador.strip():
         salvar_dados()
     else:
-        st.warning("⚠️ Por favor, preencha o nome do morador antes de salvar.")s
+        st.warning("⚠️ Por favor, preencha o nome do morador antes de salvar.")
