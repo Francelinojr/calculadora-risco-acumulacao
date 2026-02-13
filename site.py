@@ -3,7 +3,58 @@ from datetime import datetime
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 
-st.set_page_config(page_title="Calculadora de Risco de Acumulação", page_icon="📋")
+# 1. Configuração da Página
+st.set_page_config(page_title="Calculadora de Risco de Acumulação", page_icon="📋", layout="centered")
+
+# 2. Estilização para Acessibilidade (Público Idoso/Visão Reduzida)
+st.markdown(
+    """
+    <style>
+    /* Aumenta o tamanho dos títulos das categorias */
+    h2 {
+        font-size: 28px !important;
+        color: #1E3A8A !important;
+    }
+    
+    /* Aumenta o texto das perguntas (labels) */
+    div[data-testid="stWidgetLabel"] p {
+        font-size: 22px !important;
+        font-weight: bold !important;
+    }
+    
+    /* Aumenta as opções do Radio Button */
+    div[data-testid="stMarkdownContainer"] p {
+        font-size: 20px !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Aumenta o tamanho da bolinha do Radio (clique mais fácil) */
+    [data-testid="stSelectionControlValue"] {
+        transform: scale(1.5);
+        margin-right: 10px;
+    }
+
+    /* Estilização do Botão Salvar (Grande e chamativo) */
+    div.stButton > button:first-child {
+        width: 100%;
+        height: 3em;
+        font-size: 24px !important;
+        font-weight: bold !important;
+        background-color: #007bff !important;
+        color: white !important;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    /* Aumenta campos de texto */
+    input {
+        font-size: 20px !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.title("📋 FORMULÁRIO DE AVALIAÇÃO DE RISCO")
 st.markdown("---")
 
@@ -78,7 +129,7 @@ CATEGORIAS = {
 def render_categoria(key, config):
     st.header(config["titulo"])
     return st.radio(
-        "Selecione:",
+        "Selecione uma opção abaixo:",
         options=list(range(5)),
         format_func=lambda x: config["descricao"][x],
         key=key
@@ -143,15 +194,15 @@ def salvar_dados():
         df_final = pd.concat([df_existing, pd.DataFrame([row])], ignore_index=True)
         gs_conn.update(worksheet=WORKSHEET_NAME, data=df_final)
 
-        # limpa o cache após salvar para forçar atualização futura
+        # limpa o cache após salvar
         carregar_dados.clear()
 
-        st.success("Dados salvos com sucesso!")
+        st.success("✅ Dados salvos com sucesso!")
     except Exception as e:
-        st.error(f"Erro ao salvar: {e}")
+        st.error(f"❌ Erro ao salvar: {e}")
 
-if st.button("Salvar Avaliação"):
+if st.button("SALVAR AVALIAÇÃO"):
     if nome_morador.strip():
         salvar_dados()
     else:
-        st.warning("Preencha o nome do morador para salvar.")
+        st.warning("⚠️ Por favor, preencha o nome do morador antes de salvar.")s
