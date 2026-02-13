@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st 
 from datetime import datetime
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
@@ -10,6 +10,11 @@ st.markdown("---")
 # ------------------ CONEXÃO ------------------
 gs_conn = st.connection("gsheets", type=GSheetsConnection)
 WORKSHEET_NAME = "Avaliacoes_Acumulacao1"
+
+# ------------------ CACHE PARA REDUZIR CHAMADAS ------------------
+@st.cache_data(ttl=120)
+def carregar_dados():
+    return gs_conn.read(worksheet=WORKSHEET_NAME)
 
 # ------------------ IDENTIFICAÇÃO ------------------
 st.subheader("Identificação do Morador")
@@ -134,9 +139,13 @@ def salvar_dados():
     }
 
     try:
-        df_existing = gs_conn.read(worksheet=WORKSHEET_NAME, ttl=0)
+        df_existing = carregar_dados()
         df_final = pd.concat([df_existing, pd.DataFrame([row])], ignore_index=True)
         gs_conn.update(worksheet=WORKSHEET_NAME, data=df_final)
+
+        # limpa o cache após salvar para forçar atualização futura
+        carregar_dados.clear()
+
         st.success("Dados salvos com sucesso!")
     except Exception as e:
         st.error(f"Erro ao salvar: {e}")
