@@ -205,7 +205,7 @@ def verificar_cabecalhos():
     ]
     df = conn_gsheets_read()
     if df is None:
-        st.error("Não foi possível ler a aba 'Página1'. Verifique secrets e permissões.")
+        st.error(f"Não foi possível ler a aba '{WORKSHEET_NAME}'. Verifique secrets e permissões.")
         return
     cols = list(df.columns)
     faltando = [c for c in esperado if c not in cols]
