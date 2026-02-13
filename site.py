@@ -5,7 +5,7 @@ from streamlit_gsheets import GSheetsConnection
 
 st.set_page_config(page_title="Calculadora de Risco de Acumulação", page_icon="📋")
 
-st.title("📋 Avaliação Multidimensional de Acumulação")
+st.title("📋 FORMULÁRIO DE AVALIAÇÃO DE RISCO")
 st.markdown("---")
 
 # --- CONEXÃO COM GOOGLE SHEETS ---
