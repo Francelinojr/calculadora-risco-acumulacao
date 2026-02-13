@@ -6,7 +6,7 @@ O sistema permite a coleta estruturada de dados em campo e automatiza a análise
 
 ## 🚀 Demonstração
 O aplicativo está publicado e pode ser acessado em:
-👉 **[calculadora-risco-acumulacao.streamlit.app](https://calculadora-risco-acumulacao.streamlit.app/)**
+👉 **[calculadora-risco-acumulacao.streamlit.app](https://calculadora-risco.streamlit.app/)**
 
 ## 🛠️ Tecnologias Utilizadas
 * **Python**: Linguagem base para o desenvolvimento da lógica.
