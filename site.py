@@ -13,35 +13,35 @@ st.set_page_config(
 )
 
 # =====================================================
-# ESTILIZAÇÃO
+# ESTILO
 # =====================================================
-def aplicar_estilo():
-    st.markdown("""
-        <style>
-        .cat-header {
-            padding: 10px;
-            border-left: 10px solid #1E3A8A;
-            background-color: #f0f2f6;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        h2 { font-size: 26px !important; color: #1E3A8A !important; }
-        div[data-testid="stWidgetLabel"] p { font-size: 20px !important; font-weight: bold !important; }
-        div.stButton > button {
-            width: 100%;
-            height: 3.5em;
-            font-size: 22px !important;
-            font-weight: bold !important;
-            background-color: #007bff !important;
-            color: white !important;
-            border-radius: 12px;
-            border: none;
-            margin-top: 20px;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-aplicar_estilo()
+st.markdown("""
+    <style>
+    .cat-header {
+        padding: 10px;
+        border-left: 10px solid #1E3A8A;
+        background-color: #f0f2f6;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    h2 { font-size: 26px !important; color: #1E3A8A !important; }
+    div[data-testid="stWidgetLabel"] p {
+        font-size: 20px !important;
+        font-weight: bold !important;
+    }
+    div.stButton > button {
+        width: 100%;
+        height: 3.5em;
+        font-size: 22px !important;
+        font-weight: bold !important;
+        background-color: #007bff !important;
+        color: white !important;
+        border-radius: 12px;
+        border: none;
+        margin-top: 20px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # =====================================================
 # CONEXÃO GOOGLE SHEETS
@@ -51,7 +51,10 @@ WORKSHEET_NAME = "Avaliacoes_Acumulacao1"
 
 @st.cache_data(ttl=300)
 def carregar_dados():
-    return gs_conn.read(worksheet=WORKSHEET_NAME)
+    try:
+        return gs_conn.read(worksheet=WORKSHEET_NAME)
+    except:
+        return pd.DataFrame()
 
 # =====================================================
 # CATEGORIAS
@@ -110,7 +113,7 @@ CATEGORIAS = {
 }
 
 # =====================================================
-# FUNÇÕES DE NEGÓCIO
+# FUNÇÕES
 # =====================================================
 def classificar_risco(total, tem_critico):
     if total >= 21 or tem_critico:
@@ -140,11 +143,9 @@ def salvar_avaliacao(nome, endereco, respostas, total, status, intervencao):
 
 
 def resetar_campos():
-    st.session_state.nome = ""
-    st.session_state.end = ""
-    for key in CATEGORIAS:
-        st.session_state[f"r_{key}"] = 0
-
+    for key in list(st.session_state.keys()):
+        if key.startswith("r_") or key in ["nome", "end"]:
+            del st.session_state[key]
 
 # =====================================================
 # INTERFACE
@@ -162,8 +163,10 @@ st.markdown("---")
 # Perguntas
 respostas = {}
 for key, config in CATEGORIAS.items():
-    st.markdown(f'<div class="cat-header"><h2>{config["titulo"]}</h2></div>',
-                unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="cat-header"><h2>{config["titulo"]}</h2></div>',
+        unsafe_allow_html=True
+    )
 
     respostas[key] = st.radio(
         "Selecione uma opção:",
@@ -184,14 +187,24 @@ st.subheader(f"Pontuação Total: {total_pontos}")
 st.markdown(f"### Classificação Final: :{cor}[{status}]")
 st.info(f"Intervenção Recomendada: {intervencao}")
 
-# Botão
+# =====================================================
+# BOTÃO SALVAR
+# =====================================================
 if st.button("SALVAR AVALIAÇÃO"):
     if nome.strip():
         with st.spinner("Salvando..."):
             try:
-                salvar_avaliacao(nome, endereco, respostas, total_pontos, status, intervencao)
+                salvar_avaliacao(
+                    nome,
+                    endereco,
+                    respostas,
+                    total_pontos,
+                    status,
+                    intervencao
+                )
                 resetar_campos()
                 st.success("✅ Avaliação salva com sucesso!")
+                st.rerun()
             except Exception as e:
                 st.error(f"Erro ao salvar: {e}")
     else:
