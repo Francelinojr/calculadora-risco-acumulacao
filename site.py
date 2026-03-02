@@ -119,10 +119,10 @@ def classificar_risco(total, tem_critico):
     if total >= 21 or tem_critico:
         return "🔴 RISCO GRAVE (NÍVEL 4)", "red", "Acompanhamento intensivo."
     elif 13 <= total <= 20:
-        return "🟡 RISCO ALTO (NÍVEL 3)", "orange", "Visitas mensais."
+        return "🟡 RISCO ALTO (NÍVEL 3)", "yellow", "Visitas mensais."
     elif 8 <= total <= 12:
-        return "🟢 RISCO MODERADO (NÍVEL 2)", "yellow", "Visitas bimestrais."
-    return "🟠 RISCO BAIXO (NÍVEL 1)", "green", "Monitoramento trimestral."
+        return "🟢 RISCO MODERADO (NÍVEL 2)", "green", "Visitas bimestrais."
+    return "🟠 RISCO BAIXO (NÍVEL 1)", "orange", "Monitoramento trimestral."
 
 
 def salvar_avaliacao(nome, endereco, respostas, total, status, intervencao):
