@@ -61,42 +61,42 @@ def carregar_dados():
 # =====================================================
 CATEGORIAS = {
     "estrutural": {
-        "titulo": "🔹 CONDIÇÃO ESTRUTURAL",
+        "titulo": "🔹 RISCO ESTRUTURAL",
         "descricao": [
             "0 – Estrutura íntegra",
             "1 – Trincas leves",
-            "2 – Infiltração moderada",
-            "3 – Risco elétrico",
-            "4 – Risco iminente"
+            "2 – Infiltração moderada/ 1 cômodo inseguro",
+            "3 – Instalações elétricas expostas/ risco de incêndio",
+            "4 – Risco iminente de desabamento/ incêndio"
         ]
     },
     "sanitario": {
         "titulo": "🔹 RISCO SANITÁRIO / HIGIÊNICO",
         "descricao": [
-            "0 – Ambiente limpo",
+            "0 – Ambiente limpo/ desorganizado",
             "1 – Lixo leve",
-            "2 – Lixo moderado",
-            "3 – Lixo putrefato",
-            "4 – Infestação grave"
+            "2 – Lixo moderado/ ratos, baratas e etc., ocasionais",
+            "3 – Lixo putrefato/ fezes/ odor forte. Vetores frequentes.",
+            "4 – Infestação grave (ratos/baratas/escorpiões). Risco para vizinhos."
         ]
     },
     "animais": {
         "titulo": "🔹 ACÚMULO DE ANIMAIS",
         "descricao": [
-            "0 – Quantidade adequada",
-            "1 – Leve desorganização",
-            "2 – Número acima do suportado",
-            "3 – Maus-tratos",
-            "4 – Acumulação severa"
+            "0 – Nenhum animal/ quantidade adequada e cuidados presentes.",
+            "1 – Leve desorganização e cuidados presentes.",
+            "2 – Número acima do suportado higiene ruim e ausência de cuidados veterinários.",
+            "3 – Maus-tratos evidentes, animais magros/doentes.",
+            "4 – Acumulação severa(>15-20 animais / cadáveres / zoonoses)"
         ]
     },
     "obstrucao": {
         "titulo": "🔹 USO DO ESPAÇO / OBSTRUÇÃO",
         "descricao": [
-            "0 – Todos funcionais",
+            "0 – Todos os cômodosfuncionais",
             "1 – Bagunça leve",
             "2 – 1–2 cômodos inutilizados",
-            "3 – Casa inacessível",
+            "3 – Mais da metade da casa inacessível",
             "4 – Saídas bloqueadas"
         ]
     },
@@ -107,7 +107,7 @@ CATEGORIAS = {
             "1 – Isolamento leve",
             "2 – Sem rede de apoio",
             "3 – Autoabandono",
-            "4 – Incapacidade grave"
+            "4 – Incapacidade grave de autocuidado, agressividade, surto e etc."
         ]
     }
 }
@@ -119,10 +119,10 @@ def classificar_risco(total, tem_critico):
     if total >= 21 or tem_critico:
         return "🔴 RISCO GRAVE (NÍVEL 4)", "red", "Acompanhamento intensivo."
     elif 13 <= total <= 20:
-        return "🟠 RISCO ALTO (NÍVEL 3)", "orange", "Visitas mensais."
+        return "🟡 RISCO ALTO (NÍVEL 3)", "orange", "Visitas mensais."
     elif 8 <= total <= 12:
-        return "🟡 RISCO MODERADO (NÍVEL 2)", "yellow", "Visitas bimestrais."
-    return "🟢 RISCO BAIXO (NÍVEL 1)", "green", "Monitoramento trimestral."
+        return "🟢 RISCO MODERADO (NÍVEL 2)", "yellow", "Visitas bimestrais."
+    return "🟠 RISCO BAIXO (NÍVEL 1)", "green", "Monitoramento trimestral."
 
 
 def salvar_avaliacao(nome, endereco, respostas, total, status, intervencao):
@@ -154,8 +154,8 @@ st.title("📋 FORMULÁRIO DE AVALIAÇÃO DE RISCO")
 st.markdown("---")
 
 # Identificação
-st.subheader("Identificação do Morador")
-nome = st.text_input("Nome do(a) morador(a):", key="nome")
+st.subheader("Identificação")
+nome = st.text_input("Nome do usuário:", key="nome")
 endereco = st.text_input("Endereço:", key="end")
 
 st.markdown("---")
