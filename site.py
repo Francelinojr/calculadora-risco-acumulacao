@@ -150,7 +150,7 @@ def resetar_campos():
 # =====================================================
 # INTERFACE
 # =====================================================
-st.title("📋 FORMULÁRIO DE AVALIAÇÃO DE RISCO")
+st.title(" FORMULÁRIO DE AVALIAÇÃO DE RISCO")
 st.markdown("---")
 
 # Identificação
@@ -209,3 +209,4 @@ if st.button("SALVAR AVALIAÇÃO"):
                 st.error(f"Erro ao salvar: {e}")
     else:
         st.warning("⚠️ Preencha o nome antes de salvar.")
+
