@@ -7,7 +7,7 @@ from streamlit_gsheets import GSheetsConnection
 # CONFIGURAÇÃO DA PÁGINA
 # =====================================================
 st.set_page_config(
-    page_title="Calculadora de Risco de Acumulação",
+    page_title="Formulário de Avaliação de Risco",
     page_icon="📋",
     layout="centered"
 )
@@ -209,4 +209,5 @@ if st.button("SALVAR AVALIAÇÃO"):
                 st.error(f"Erro ao salvar: {e}")
     else:
         st.warning("⚠️ Preencha o nome antes de salvar.")
+
 
